@@ -15,15 +15,23 @@
  * other terminologies -> show start node, [] show node and [[]] show accept node, -a-> transition 'a'.
  * operand 'a' can be simulated like
  *  ->[node1]-a->[[node2]]
- *  a* operation doing like
+ *  a*(star) operation doing like
  *  ->[[node3]]-$->[node1]-a->[[node2]] and [[node2]]-$->[node1]
  *
+ * a+b(union) operation doing as
+ * ->[node3]-b->[[node4]] // b simulate like this than
  *
+ *  ->[node5]-$->[node1]-a->[[node2]] and ->[node5]-$->[node3]-b->[[node4]]
  * 
+ * a.b(concat) operation doing like
+ * ->[node1]-a->[node2]-$->[node3]-b->[[node4]]
+ *
+ *
+ *
  *
  * created by
  *  Ezgi Nur UCAY
- *  Can BÖLEL
+ *  Can BÃ–LEL
  * 
  *
  * */
