@@ -1,17 +1,46 @@
+
 var app = require('express')();
 var http = require('http').Server(app);
+var port = 3000;
 
-var port=3030;
+var io = require('socket.io')(http);
 
-app.get('/', function(req, res){
-    res.sendFile(__dirname + '/views/index.html');
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/views/index.html');
 });
-var io=require('socket.io')(http);
-io.on('connection',function(socket){
-    console.log("connected");
+
+
+http.listen(port, function () {
+  console.log("server listening " + port);
+});
+io.on('connection', function (socket) {
+  console.log("user connected");
+  socket.emit('message','emitted');
+
+  socket.on('reply', () => { console.log("reply") });
+  
+});
+
+io.sockets.on('chat',function(socket){
+  socket.emit('message','emitted');
+
+  socket.on('message', function (message) {
+
+    console.log('A client is speaking to me! They’re saying: ' + message);
+
+}); 
+
+
+io.sockets.on('message',function(socket){
+  socket.emit('message','emitted');
+  console.log('A client is speaking to me! They’re saying: ' + message);
+}); 
+
+
+
 })
-http.listen(port, function(){
-  console.log('listening on *:'+port);
+io.sockets.on('disconnect', function () {
+  console.log('user disconnected');
 });
 
 
