@@ -9,6 +9,8 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
 });
 
+
+
 http.listen(port, function () {
   console.log("server listening " + port);
 });
@@ -19,6 +21,8 @@ io.on('connection', function (socket) {
   socket.on('reply', () => { console.log("reply") });
   
 });
+
+
 io.sockets.on('chat',function(socket){
   socket.emit('message','emitted');
 
