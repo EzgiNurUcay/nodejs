@@ -1,2 +1,9 @@
 1-Nondeterministic Finite Automata silumator
 2-Nodejs web-socket
+
+
+Git Network
+
+[Master] ----NFA-------------------------------------------------------------------------------------------->
+            clone-> [develop]------server.js----------------------------------------------------- rebase --->
+                                             clone --> feature-frontend----index.html-----merge-->
