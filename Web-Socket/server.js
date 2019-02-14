@@ -1,45 +1,33 @@
 
-var app = require('express')();
-var http = require('http').Server(app);
-var port = 3000;
+const app = require('express')();
+const http = require('http').createServer(app);
+const io = require('socket.io').listen(http);
+const port = 3000;
 
-var io = require('socket.io')(http);
 
-app.get('/', function (req, res) {
+
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
-
-
-
 http.listen(port, function () {
   console.log("server listening " + port);
 });
-io.on('connection', function (socket) {
-  console.log("user connected");
-  socket.emit('message','emitted');
+const connections = [];
 
-  socket.on('reply', () => { console.log("reply") });
+io.sockets.on('connection', (socket) => {
+  connections.push(socket);
+  console.log(' %s sockets is connected', connections.length);
   
+  socket.on('disconnect', () => {
+    connections.splice(connections.indexOf(socket), 1);
+  });
+
+  socket.on('sending message', (message) => {
+    console.log('Message is received :', message);
+    io.sockets.emit('new message', { message: message });
+  });
+
+
+  socket.broadcast.emit('broadcastMessage', { message: 'hi everyone online client count is' + connections.length });
+
 });
-
-
-io.sockets.on('chat',function(socket){
-  socket.emit('message','emitted');
-
-  socket.on('message', function (message) {
-
-    console.log('A client is speaking to me! They’re saying: ' + message);
-
-}); 
-
-io.sockets.on('message',function(socket){
-  socket.emit('message','emitted');
-  console.log('A client is speaking to me! They’re saying: ' + message);
-}); 
-
-})
-io.sockets.on('disconnect', function () {
-  console.log('user disconnected');
-});
-
-
