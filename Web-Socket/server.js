@@ -27,7 +27,9 @@ io.sockets.on('connection', (socket) => {
     io.sockets.emit('new message', { message: message });
   });
 
-
+socket.on('broadcast',(message)=>{
   socket.broadcast.emit('broadcastMessage', { message: 'hi everyone online client count is' + connections.length });
+});
+ 
 
 });
