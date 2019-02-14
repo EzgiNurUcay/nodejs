@@ -15,7 +15,7 @@
     <div class="row" style="margin-top: 70px;">
       <div class="col-md-4"></div>
       <div class="col-md-6">
-        <div id="broadcast">Broadcast:</div>
+        <div id="broadcast"></div>
         <div id="chatArea">
         </div>
         <form id="myForm">
@@ -43,10 +43,9 @@
       form.submit(function (e) {
         e.preventDefault();
         socket.emit('sending message', txt.val());
-        socket.emit('broadcast',function(data){
-            
-        });
+        socket.emit('broadcast', bcast.val());
         txt.val('');
+
       });
 
       socket.on('new message', function (data) {
@@ -55,8 +54,10 @@
 
 
       socket.on('broadcastMessage', function (data) {
+        bcast.val("");
+        console.log("bcastlen is" + bcast.length);
         bcast.append('<div class="well">' + data.message + '</div>')
-      })
+      });
 
 
     });
