@@ -15,6 +15,17 @@
     <div class="row" style="margin-top: 70px;">
       <div class="col-md-4"></div>
       <div class="col-md-6">
+<<<<<<< HEAD
+=======
+        <div>Choose Room ID</div>
+        <form id="rooms_id">
+          <input type="radio" name="room_select" value="1" />ROOM 1<br>
+          <input type="radio" name="room_select" value="2" />ROOM 2<br>
+          <input type="radio" name="room_select" value="3" />ROOM 3<br>
+        </form>
+        <br>
+        <div id="roomid"></div>
+>>>>>>> version 0.0.4 multi chat room added
         <div id="broadcast"></div>
         <div id="chatArea">
         </div>
@@ -31,19 +42,38 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-
+  <script src="/socket.io/socket.io.js"></script>
   <script>
+
+
     jQuery(document).ready(function () {
       var socket = io.connect();
       var form = jQuery('#myForm');
       var txt = jQuery('#txt');
       var chatArea = jQuery('#chatArea');
       var bcast = jQuery('#broadcast');
+      var roomid = jQuery('#roomid');
 
+
+      $('#rooms_id').on('click', function () {
+        var value = $("[name=room_select]:checked").val();
+        var room_radio = $('input:radio[name=room_select]:checked').val();
+        socket.emit('select room', room_radio);
+
+
+
+
+      });
       form.submit(function (e) {
         e.preventDefault();
         socket.emit('sending message', txt.val());
+<<<<<<< HEAD
         socket.emit('broadcast', bcast.val());
+=======
+        socket.emit('broadcast', function (data) {
+
+        });
+>>>>>>> version 0.0.4 multi chat room added
         txt.val('');
 
       });
@@ -54,12 +84,22 @@
 
 
       socket.on('broadcastMessage', function (data) {
+<<<<<<< HEAD
         bcast.val("");
         console.log("bcastlen is" + bcast.length);
+=======
+        bcast.empty();
+>>>>>>> version 0.0.4 multi chat room added
         bcast.append('<div class="well">' + data.message + '</div>')
       });
 
 
+      socket.on('connectToRoom', function (data) {
+        roomid.empty();
+        roomid.append('<div class="well">' + data.message + '</div>');
+
+
+      });
     });
   </script>
 </body>
