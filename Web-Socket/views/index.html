@@ -72,13 +72,15 @@
       });
 
       socket.on('new message', function (data) {
-        chatArea.append('<div class="well">' + data.message + '</div>');
+        chatArea.append('<div class="well" id="colorfull">' + data.message + '</div>');
+        random_bg_color("colorfull");
       });
 
 
       socket.on('broadcastMessage', function (data) {
         bcast.empty();
-        bcast.append('<div class="well">' + data.message + '</div>')
+        bcast.append('<div class="well" id="test1">' + data.message + '</div>')
+        random_bg_color("test1");
       });
 
 
@@ -89,6 +91,17 @@
 
       });
     });
+
+
+    function random_bg_color(id) {
+      var x = Math.floor(Math.random() * 256);
+      var y = Math.floor(Math.random() * 256);
+      var z = Math.floor(Math.random() * 256);
+      var bgColor = "rgb(" + x + "," + y + "," + z + ")";
+      console.log(bgColor);
+      document.getElementById(id).style.backgroundColor = bgColor;
+    };
+
   </script>
 </body>
 
