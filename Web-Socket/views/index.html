@@ -15,8 +15,6 @@
     <div class="row" style="margin-top: 70px;">
       <div class="col-md-4"></div>
       <div class="col-md-6">
-<<<<<<< HEAD
-=======
         <div>Choose Room ID</div>
         <form id="rooms_id">
           <input type="radio" name="room_select" value="1" />ROOM 1<br>
@@ -25,7 +23,6 @@
         </form>
         <br>
         <div id="roomid"></div>
->>>>>>> version 0.0.4 multi chat room added
         <div id="broadcast"></div>
         <div id="chatArea">
         </div>
@@ -67,13 +64,7 @@
       form.submit(function (e) {
         e.preventDefault();
         socket.emit('sending message', txt.val());
-<<<<<<< HEAD
         socket.emit('broadcast', bcast.val());
-=======
-        socket.emit('broadcast', function (data) {
-
-        });
->>>>>>> version 0.0.4 multi chat room added
         txt.val('');
 
       });
@@ -84,12 +75,7 @@
 
 
       socket.on('broadcastMessage', function (data) {
-<<<<<<< HEAD
-        bcast.val("");
-        console.log("bcastlen is" + bcast.length);
-=======
         bcast.empty();
->>>>>>> version 0.0.4 multi chat room added
         bcast.append('<div class="well">' + data.message + '</div>')
       });
 
