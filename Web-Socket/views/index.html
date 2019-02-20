@@ -19,9 +19,10 @@
         <form id="rooms_id">
           <!-- <input type="radio" name="r_room_select" value="1" />ROOM 1<br>
           <input type="radio" name="r_room_select" value="2" />ROOM 2<br>
-          <input type="radio" name="r_room_select" value="3" />ROOM 3<br>
-         --> <textarea id="txt_room_name"></textarea>
+          <input type="radio" name="r_room_select" value="3" />ROOM 3<br>-->
+          <textarea id="txt_room_name"></textarea>
           <button type="button" id="connect_btn">CONNECT</button>
+          <!-- button type is important for html if type is button you must define function for it.-->
         </form>
         <br>
         <div id="current_room"></div>
@@ -46,6 +47,7 @@
 
 
     jQuery(document).ready(function () {
+
       var socket = io.connect();
       var form = jQuery('#myForm');
       var txt = jQuery('#txt');
@@ -55,13 +57,15 @@
       var txt_room_name = jQuery('#txt_room_name');
 
       $('#connect_btn').on('click', function () {
+        // To use defined room name you can use without connect button.
+
         /*$('#rooms_id').on('click', function () {
           var value = $("[name=r_room_select]:checked").val();
           var room_radio = $('input:radio[name=r_room_select]:checked').val();
           socket.emit('select room', room_radio);
         });*/
 
-
+        // To publish any data you must emit from client side than you can use "socket.on" function to recieve data. 
         socket.emit('select room', txt_room_name.val());
 
       });
@@ -74,20 +78,20 @@
         txt.val('');
 
       });
-
+      
       socket.on('new message', function (data) {
-        chatArea.append('<div class="well" id="colorfull">' + data.message + '</div>');
-        random_bg_color("colorfull");
+        chatArea.append('<div class="well" id="colorfull-message">' + data.message + '</div>');
+        random_bg_color("colorfull-message");
       });
 
-
+      // Broadcast shows user count to except own.
       socket.on('broadcastMessage', function (data) {
         bcast.empty();
-        bcast.append('<div class="well" id="test1">' + data.message + '</div>')
-        random_bg_color("test1");
+        bcast.append('<div class="well" id="broadcast">' + data.message + '</div>')
+        random_bg_color("broadcast");
       });
 
-
+      // To show room name.
       socket.on('connectToRoom', function (data) {
         current_room.empty();
         current_room.append('<div class="well">' + data.message + '</div>');

@@ -3,7 +3,6 @@ const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io').listen(http);
 const port = 3000;
-var roomno;
 
 
 app.get('/', (req, res) => {
@@ -18,15 +17,12 @@ io.sockets.on('connection', (socket) => {
 
 
   socket.on('select room', (data) => {
-    //if (io.nsps['/'].adapter.rooms["room-" + data] && io.nsps['/'].adapter.rooms["room-" + data].length > Roomcapacity) roomno++;
 
     console.log("selected room id " + data);
     socket.join("room-" + data);
-    io.sockets.in("room-" + data).emit('connectToRoom', { message: "You are in '" + data + "' room" });
-    roomno = data;
+    io.sockets.in(Object.keys(io.sockets.adapter.sids[socket.id])[1]).emit('connectToRoom', { message: "You are in '" + data + "' room" });
+    //console.log("room name is", Object.keys(io.sockets.adapter.sids[socket.id])[1]); shows room name.
   });
-
-
 
 
   connections.push(socket);
@@ -34,8 +30,8 @@ io.sockets.on('connection', (socket) => {
 
 
   socket.on('sending message', (message) => {
-    console.log('Message is " %s " received from %s:', message, roomno);
-    io.sockets.in("room-" + roomno).emit('new message', { message: message });
+    console.log('Message is " %s " received from %s:', message, Object.keys(io.sockets.adapter.sids[socket.id])[1]);
+    io.sockets.in(Object.keys(io.sockets.adapter.sids[socket.id])[1]).emit('new message', { message: message });
   });
 
   socket.on('broadcast', (message) => {
