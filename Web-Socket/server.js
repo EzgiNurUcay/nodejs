@@ -22,7 +22,7 @@ io.sockets.on('connection', (socket) => {
 
     console.log("selected room id " + data);
     socket.join("room-" + data);
-    io.sockets.in("room-" + data).emit('connectToRoom', { message: "You are in " + data +" .room"});
+    io.sockets.in("room-" + data).emit('connectToRoom', { message: "You are in '" + data + "' room" });
     roomno = data;
   });
 
@@ -34,14 +34,14 @@ io.sockets.on('connection', (socket) => {
 
 
   socket.on('sending message', (message) => {
-    console.log('Message is received :', message);
+    console.log('Message is " %s " received from %s:', message, roomno);
     io.sockets.in("room-" + roomno).emit('new message', { message: message });
   });
 
-socket.on('broadcast',(message)=>{
-  socket.broadcast.emit('broadcastMessage', { message: 'hi everyone online client count is' + connections.length });
-});
- 
+  socket.on('broadcast', (message) => {
+    socket.broadcast.emit('broadcastMessage', { message: 'hi everyone online client count is' + connections.length });
+  });
+
 
 
   socket.on('disconnect', () => {

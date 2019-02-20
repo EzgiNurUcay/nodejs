@@ -17,12 +17,14 @@
       <div class="col-md-6">
         <div>Choose Room ID</div>
         <form id="rooms_id">
-          <input type="radio" name="room_select" value="1" />ROOM 1<br>
-          <input type="radio" name="room_select" value="2" />ROOM 2<br>
-          <input type="radio" name="room_select" value="3" />ROOM 3<br>
+          <!-- <input type="radio" name="r_room_select" value="1" />ROOM 1<br>
+          <input type="radio" name="r_room_select" value="2" />ROOM 2<br>
+          <input type="radio" name="r_room_select" value="3" />ROOM 3<br>
+         --> <textarea id="txt_room_name"></textarea>
+          <button type="button" id="connect_btn">CONNECT</button>
         </form>
         <br>
-        <div id="roomid"></div>
+        <div id="current_room"></div>
         <div id="broadcast"></div>
         <div id="chatArea">
         </div>
@@ -31,7 +33,7 @@
             <textarea rows="5" id="txt" cols="5" class="form-control"></textarea>
           </div>
           <div class="form-group">
-            <button type="submit" class="btn btn-success">Send</button>
+            <button type="submit" class="btn btn-sguccess">Send</button>
           </div>
         </form>
       </div>
@@ -49,44 +51,61 @@
       var txt = jQuery('#txt');
       var chatArea = jQuery('#chatArea');
       var bcast = jQuery('#broadcast');
-      var roomid = jQuery('#roomid');
+      var current_room = jQuery('#current_room');
+      var txt_room_name = jQuery('#txt_room_name');
+
+      $('#connect_btn').on('click', function () {
+        /*$('#rooms_id').on('click', function () {
+          var value = $("[name=r_room_select]:checked").val();
+          var room_radio = $('input:radio[name=r_room_select]:checked').val();
+          socket.emit('select room', room_radio);
+        });*/
 
 
-      $('#rooms_id').on('click', function () {
-        var value = $("[name=room_select]:checked").val();
-        var room_radio = $('input:radio[name=room_select]:checked').val();
-        socket.emit('select room', room_radio);
-
-
-
+        socket.emit('select room', txt_room_name.val());
 
       });
       form.submit(function (e) {
         e.preventDefault();
         socket.emit('sending message', txt.val());
-        socket.emit('broadcast', bcast.val());
+        socket.emit('broadcast', function (data) {
+
+        });
         txt.val('');
 
       });
 
       socket.on('new message', function (data) {
-        chatArea.append('<div class="well">' + data.message + '</div>');
+        chatArea.append('<div class="well" id="colorfull">' + data.message + '</div>');
+        random_bg_color("colorfull");
       });
 
 
       socket.on('broadcastMessage', function (data) {
         bcast.empty();
-        bcast.append('<div class="well">' + data.message + '</div>')
+        bcast.append('<div class="well" id="test1">' + data.message + '</div>')
+        random_bg_color("test1");
       });
 
 
       socket.on('connectToRoom', function (data) {
-        roomid.empty();
-        roomid.append('<div class="well">' + data.message + '</div>');
+        current_room.empty();
+        current_room.append('<div class="well">' + data.message + '</div>');
 
 
       });
     });
+
+
+    function random_bg_color(id) {
+      var x = Math.floor(Math.random() * 256);
+      var y = Math.floor(Math.random() * 256);
+      var z = Math.floor(Math.random() * 256);
+      var bgColor = "rgb(" + x + "," + y + "," + z + ")";
+      console.log(bgColor);
+      document.getElementById(id).style.backgroundColor = bgColor;
+    };
+
   </script>
 </body>
 
