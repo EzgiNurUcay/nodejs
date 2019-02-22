@@ -7,36 +7,49 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Node.js Socket.io Chat Application</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 </head>
 
 <body>
   <div class="container">
 
     <div class="row" style="margin-top: 70px;">
-      <div class="col-md-4"></div>
-      <div class="col-md-6">
-        <div>Choose Room ID</div>
-        <form id="rooms_id">
-          <!-- <input type="radio" name="r_room_select" value="1" />ROOM 1<br>
-          <input type="radio" name="r_room_select" value="2" />ROOM 2<br>
-          <input type="radio" name="r_room_select" value="3" />ROOM 3<br>-->
-          <textarea id="txt_room_name"></textarea>
-          <button type="button" id="connect_btn">CONNECT</button>
-          <!-- button type is important for html if type is button you must define function for it.-->
-        </form>
-        <br>
-        <div id="current_room"></div>
-        <div id="broadcast"></div>
-        <div id="chatArea">
+
+      <div class="col-md-4">
+        <div id="account_info">
+
+          <form id="form_account">
+            <h6>Enter User Name</h6>
+            <textarea id="user_name_info"></textarea>
+            <h6>Choose Room ID</h6>
+            <textarea id="room_name_info"></textarea>
+            <button type="button" class="btn btn-success btn-md btn-block" id="connect_btn">CONNECT</button>
+            <!-- button type is important for html if type is button you must define function for it.-->
+          </form>
         </div>
-        <form id="myForm">
-          <div class="form-group">
-            <textarea rows="5" id="txt" cols="5" class="form-control"></textarea>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-sguccess">Send</button>
-          </div>
-        </form>
+      </div>
+      <div class="col-md-6">
+
+        <div id="message_part">
+          <form id="form_message">
+            <br>
+            <div class="panel panel-success">
+              <div class="panel-heading" id="current_room"></div>
+              <div class="panel-body" id="user_name_txt"></div>
+
+
+            </div>
+            <!--<div id="broadcast"></div>-->
+            <br>
+            <div id=messagges></div>
+            <div class="form-group">
+              <textarea rows="4" id="txt" cols="4" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-sguccess">Send</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -49,66 +62,78 @@
     jQuery(document).ready(function () {
 
       var socket = io.connect();
-      var form = jQuery('#myForm');
+      var form_message = jQuery('#form_message');
       var txt = jQuery('#txt');
-      var chatArea = jQuery('#chatArea');
+      var messagges = jQuery('#messagges');
       var bcast = jQuery('#broadcast');
       var current_room = jQuery('#current_room');
-      var txt_room_name = jQuery('#txt_room_name');
+      var user_name_txt = jQuery('#user_name_txt');
+      var txt_room_name = jQuery('#room_name_info');
+      var user_name_info = jQuery('#user_name_info');
+
+
+      $("#message_part").hide();
 
       $('#connect_btn').on('click', function () {
+
         // To use defined room name you can use without connect button.
-
-        /*$('#rooms_id').on('click', function () {
-          var value = $("[name=r_room_select]:checked").val();
-          var room_radio = $('input:radio[name=r_room_select]:checked').val();
-          socket.emit('select room', room_radio);
-        });*/
-
         // To publish any data you must emit from client side than you can use "socket.on" function to recieve data. 
         socket.emit('select room', txt_room_name.val());
+        socket.emit('user name defined', user_name_info.val());
+
+        $("#message_part").show();
+        $("#account_info").hide();
 
       });
-      form.submit(function (e) {
+      form_message.submit(function (e) {
         e.preventDefault();
-        socket.emit('sending message', txt.val());
-        socket.emit('broadcast', function (data) {
-
-        });
+        socket.emit('send message', txt.val());
+        //socket.emit('broadcast', function (data) {});
         txt.val('');
 
       });
-      
-      socket.on('new message', function (data) {
-        chatArea.append('<div class="well" id="colorfull-message">' + data.message + '</div>');
-        random_bg_color("colorfull-message");
+
+      socket.on('incomming message', function (data) {
+        messagges.append('<div class="well" id="colorfull-message"  style="margin-right:70%">' + data.message + '</div>');
+        //random_bg_color("colorfull-message");
+      });
+      socket.on('outgoing message', function (data) {
+        messagges.append('<div class="well" id="colorfull-message" style="margin-left:70%">' + data.message + '</div>');
+        //random_bg_color("colorfull-message");
       });
 
-      // Broadcast shows user count to except own.
+      /*// Broadcast shows user count to except own.
       socket.on('broadcastMessage', function (data) {
         bcast.empty();
         bcast.append('<div class="well" id="broadcast">' + data.message + '</div>')
         random_bg_color("broadcast");
-      });
+      });*/
 
       // To show room name.
-      socket.on('connectToRoom', function (data) {
+      socket.on('connect room', function (data) {
         current_room.empty();
-        current_room.append('<div class="well">' + data.message + '</div>');
-
+        current_room.append('<div>' + data.message + '</div>');
 
       });
+      socket.on('connect user', function (data) {
+        user_name_txt.append('<div>' + data.message + '</div>');
+      });
+
+
+
+
+
     });
 
 
-    function random_bg_color(id) {
+    /*function random_bg_color(id) {
       var x = Math.floor(Math.random() * 256);
       var y = Math.floor(Math.random() * 256);
       var z = Math.floor(Math.random() * 256);
       var bgColor = "rgb(" + x + "," + y + "," + z + ")";
       console.log(bgColor);
       document.getElementById(id).style.backgroundColor = bgColor;
-    };
+    };*/
 
   </script>
 </body>

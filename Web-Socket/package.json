@@ -4,6 +4,7 @@
     "description": "my first socket.io app",
     "dependencies": {
         "express": "^4.16.4",
+        "hash-table": "^0.1.0",
         "http": "0.0.0",
         "jade": "^1.11.0",
         "nodemon": "^1.18.10",
